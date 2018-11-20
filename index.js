@@ -19,19 +19,10 @@ app.get('/api/courses', (req, res) => {
 });
 
 app.post('/api/courses', (req, res) => {
-    // Joi schema
-    const schema = {
-        name: Joi.string().min(3).required()
-    };
+    const { error } = validateCourse(req.body);
 
-    // Use Joi to validate input.
-    const result = Joi.validate(req.body, schema);
-    console.log(result);
-
-
-    // Instead of writing input validation you can use a package.
-    if (result.error) {
-        res.status(400).send(result.error.details[0].message);
+    if (error) {
+        res.status(400).send(error.details[0].message);
         return;
     }
 
@@ -45,12 +36,37 @@ app.post('/api/courses', (req, res) => {
 
 });
 
+app.put('/api/courses/:id', (req, res) => {
+    // Update a course a certin ID.
+    const course = courses.find(c => c.id === parseInt(req.params.id));
+    if (!course) res.status(404).send('The course with the given id was not found.'); // 404
+
+    // example of object destructering 
+    const { error } = validateCourse(req.body);
+    if (error) {
+        res.status(400).send(error.details[0].message);
+        return;
+    }
+    // Update course
+    course.name = req.body.name;
+    res.send(course);
+});
+
 // Example of using uri params to return data
 app.get('/api/courses/:id', (req, res) => {
     const course = courses.find(c => c.id === parseInt(req.params.id));
     if (!course) res.status(404).send('The course with the given id was not found.') // 404
     else res.send(course);
 });
+
+
+function validateCourse (course) {
+    const schema = {
+        name: Joi.string().min(3).required()
+    };
+    // Use Joi to validate input.    
+    return Joi.validate(course, schema);
+}
 
 
 // PORT read from environment variable otherwise use default value.
