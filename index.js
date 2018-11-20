@@ -1,4 +1,5 @@
 const express = require('express');
+const Joi = require('joi');
 const app = express();
 
 app.use(express.json()); //adding a piece of middleware.
@@ -18,7 +19,22 @@ app.get('/api/courses', (req, res) => {
 });
 
 app.post('/api/courses', (req, res) => {
-    
+    // Joi schema
+    const schema = {
+        name: Joi.string().min(3).required()
+    };
+
+    // Use Joi to validate input.
+    const result = Joi.validate(req.body, schema);
+    console.log(result);
+
+
+    // Instead of writing input validation you can use a package.
+    if (result.error) {
+        res.status(400).send(result.error.details[0].message);
+        return;
+    }
+
     const course = {
         id: courses.length + 1,
         name: req.body.name
