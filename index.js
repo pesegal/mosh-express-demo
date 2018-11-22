@@ -1,3 +1,7 @@
+// Debugger
+const startupDebugger = require('debug')('app:startup');
+const dbDebugger = require('debug')('app:db');
+// ..
 const config = require('config');
 const express = require('express');
 const morgan = require('morgan');
@@ -30,15 +34,17 @@ console.log('App Password: ' + config.get('mail.password'));
 if (app.get('env') === 'development') {
     // HTTP Request Logger
     app.use(morgan('dev'));
-    console.log('Morgan enabled.')
+    startupDebugger('Morgan enabled.');
 }
-
 
 const courses = [
     { id: 1, name: 'course1' },
     { id: 2, name: 'course2' },
     { id: 3, name: 'course3' }
 ];
+
+// DB WORK
+dbDebugger('DB WORK')
 
 app.get('/', (req, res) => {
     res.send('Hello World!!!');
