@@ -1,3 +1,4 @@
+const config = require('config');
 const express = require('express');
 const morgan = require('morgan');
 const Joi = require('joi');
@@ -19,6 +20,11 @@ app.use(express.static('public')); //extended allows us to parse arrays and such
 // Custom Middleware
 app.use(logger) 
 app.use(auth)
+
+// Environment configuration dependent packages
+console.log('My Application Name: ' + config.get('name'));
+console.log('Mail Server Host: ' + config.get('mail.host'));
+console.log('App Password: ' + config.get('mail.password'));
 
 // Environment dependent middleware.
 if (app.get('env') === 'development') {
