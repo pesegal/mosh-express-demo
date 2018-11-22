@@ -10,6 +10,7 @@ const helmet = require('helmet');
 const logger = require('./logger');
 const auth = require('./auth');
 const courses = require('./routes/courses');
+const home = require('./routes/home')
 const app = express();
 
 // Which environment the code is running in
@@ -32,11 +33,12 @@ app.use(auth)
 
 // Linking in Routes
 app.use('/api/courses', courses);
+app.use('/', home);
 
 // Environment configuration dependent packages
 console.log('My Application Name: ' + config.get('name'));
 console.log('Mail Server Host: ' + config.get('mail.host'));
-console.log('App Password: ' + config.get('mail.password' || 'No ENV Pass Set'));
+console.log('App Password: ' + config.get('mail.password') || 'No ENV Pass Set');
 
 // Environment dependent middleware.
 if (app.get('env') === 'development') {
@@ -47,14 +49,6 @@ if (app.get('env') === 'development') {
 
 // DB WORK debug example
 dbDebugger('DB WORK');
-
-// Render HTML template
-app.get('/', (req, res) => {
-    res.render('index', {
-        title: 'My Express App',
-        message: 'Hello'
-    });
-});
 
 // PORT read from environment variable otherwise use default value.
 const port = process.env.PORT || 3000;
