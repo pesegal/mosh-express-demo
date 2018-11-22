@@ -6,15 +6,26 @@ const logger = require('./logger');
 const auth = require('./auth');
 const app = express();
 
-app.use(helmet())
+// Which environment the code is running in
+console.log(`NODE_ENV: ${process.env.NODE_ENV}`)
+// You can also get the env from app if NODE_ENV undefined then it defaults to 'development'
+console.log(`env: ${app.get('env')}`)
+
+// MIDDLEWARE
+app.use(helmet()) // Used to validate HTTP headers (best practice)
 app.use(express.json()); //adding a piece of middleware.
 app.use(express.urlencoded({ extended: true })); //extended allows us to parse arrays and such
 app.use(express.static('public')); //extended allows us to parse arrays and such
 // Custom Middleware
 app.use(logger) 
 app.use(auth)
-// HTTP Request Logger
-app.use(morgan('dev'));
+
+// Environment dependent middleware.
+if (app.get('env') === 'development') {
+    // HTTP Request Logger
+    app.use(morgan('dev'));
+    console.log('Morgan enabled.')
+}
 
 
 const courses = [
