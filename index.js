@@ -1,16 +1,21 @@
 const express = require('express');
+const morgan = require('morgan');
 const Joi = require('joi');
+const helmet = require('helmet');
 const logger = require('./logger');
 const auth = require('./auth');
 const app = express();
 
+app.use(helmet())
 app.use(express.json()); //adding a piece of middleware.
 app.use(express.urlencoded({ extended: true })); //extended allows us to parse arrays and such
 app.use(express.static('public')); //extended allows us to parse arrays and such
-
-app.use(logger)
-
+// Custom Middleware
+app.use(logger) 
 app.use(auth)
+// HTTP Request Logger
+app.use(morgan('dev'));
+
 
 const courses = [
     { id: 1, name: 'course1' },
