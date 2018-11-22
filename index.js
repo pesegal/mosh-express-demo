@@ -1,8 +1,16 @@
 const express = require('express');
 const Joi = require('joi');
+const logger = require('./logger');
+const auth = require('./auth');
 const app = express();
 
 app.use(express.json()); //adding a piece of middleware.
+app.use(express.urlencoded({ extended: true })); //extended allows us to parse arrays and such
+app.use(express.static('public')); //extended allows us to parse arrays and such
+
+app.use(logger)
+
+app.use(auth)
 
 const courses = [
     { id: 1, name: 'course1' },
