@@ -16,6 +16,10 @@ console.log(`NODE_ENV: ${process.env.NODE_ENV}`)
 // You can also get the env from app if NODE_ENV undefined then it defaults to 'development'
 console.log(`env: ${app.get('env')}`)
 
+// Registering the templeting engine with express.
+app.set('view engine', 'pug');
+app.set('views', './views'); // This is default location and this line is not required unless diff loc.
+
 // MIDDLEWARE
 app.use(helmet()) // Used to validate HTTP headers (best practice)
 app.use(express.json()); //adding a piece of middleware.
@@ -46,8 +50,13 @@ const courses = [
 // DB WORK
 dbDebugger('DB WORK')
 
+
+// Render HTML template
 app.get('/', (req, res) => {
-    res.send('Hello World!!!');
+    res.render('index', {
+        title: 'My Express App',
+        message: 'Hello'
+    });
 });
 
 app.get('/api/courses', (req, res) => {
