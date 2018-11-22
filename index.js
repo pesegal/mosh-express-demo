@@ -1,16 +1,17 @@
 // Debugger
-const startupDebugger = require('debug')('app:startup');
-const dbDebugger = require('debug')('app:db');
+const debug = require('debug')('app:startup');
 // ..
 const config = require('config');
 const express = require('express');
 const morgan = require('morgan');
 const Joi = require('joi');
 const helmet = require('helmet');
-const logger = require('./logger');
-const auth = require('./auth');
+// Module custom middleware
+const logger = require('./middleware/logger');
+const auth = require('./middleware/auth');
+// Module routes
 const courses = require('./routes/courses');
-const home = require('./routes/home')
+const home = require('./routes/home');
 const app = express();
 
 // Which environment the code is running in
@@ -44,11 +45,8 @@ console.log('App Password: ' + config.get('mail.password') || 'No ENV Pass Set')
 if (app.get('env') === 'development') {
     // HTTP Request Logger
     app.use(morgan('dev'));
-    startupDebugger('Morgan enabled.');
+    debug('Morgan enabled.');
 }
-
-// DB WORK debug example
-dbDebugger('DB WORK');
 
 // PORT read from environment variable otherwise use default value.
 const port = process.env.PORT || 3000;
